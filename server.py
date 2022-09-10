@@ -5,13 +5,17 @@ import os
 from twilio.rest import Client
 import json
 from os.path import exists as file_exists
-import firebase_admin
-from firebase_admin import firestore
+import random
+import time
+import schedule
 
 DOWNLOAD_DIRECTORY = '/home/human/Git/LittleTexts/images'
 app = Flask(__name__)
 
-def sms_send(client: Client, to_number: str, body: str):
+def sms_send(to_number: str, body: str):
+    account_sid = os.environ['TWILIO_ACCOUNT_SID']
+    auth_token = os.environ['TWILIO_AUTH_TOKEN']
+    client = Client(account_sid, auth_token)
     send_number = os.environ['TWILIO_SEND_NUMBER']
     message = client.messages \
                     .create(
@@ -22,47 +26,92 @@ def sms_send(client: Client, to_number: str, body: str):
     
     print(message.sid)
 
+def send_prompt():
+    config_json = open('config.json')
+    config_obj = json.load(config_json)
+    
+    challenges_json = open('challenges.json')
+    challenges_obj = json.load(challenges_json)
+    
+    random1 = random.randint(0, len(challenges_obj) - 1)
+    random2 = random.randint(0, len(challenges_obj) - 1)
+    sms_send(config_obj['user1'][0]['phoneNumber'], f"Your LittleTexts Prompt: {challenges_obj[str(random1)][0]['challText'].replace('@@NICKNAME@@', config_obj['user2'][0]['nickname'])}")
+    sms_send(config_obj['user2'][0]['phoneNumber'], f"Your LittleTexts Prompt: {challenges_obj[str(random2)][0]['challText'].replace('@@NICKNAME@@', config_obj['user1'][0]['nickname'])}")
+    
+    data_json = open('data.json')
+    data_obj = json.load(data_json)
+    data_obj['user1'][0]['expectingResponse'] = True
+    data_obj['user2'][0]['expectingResponse'] = True
+    data_obj['user1'][0]['currentChallenge'] = random1
+    data_obj['user2'][0]['currentChallenge'] = random2
+    data_obj['user1'][0]['pastChallenges'].append(random1)
+    data_obj['user2'][0]['pastChallenges'].append(random2)
+
+    with open('data.json','w') as jsonFile:
+        json.dump(data_obj, jsonFile)
+        
+
 
 @app.route("/sms", methods=['GET', 'POST'])
 def sms_reply():
+    from_number = request.values.get('From')
     body = request.values.get('Body', None)
     
-    if body == "START":
+    config_json = open('config.json')
+    config_obj = json.load(config_json)
+
+    challenges_json = open('challenges.json')
+    challenges_obj = json.load(challenges_json)
+
+    data_json = open('data.json')
+    data_obj = json.load(data_json)
+
+    if from_number == config_obj['user1'][0]['phoneNumber'] and data_obj['user1'][0]['expectingResponse']:
         resp = MessagingResponse()
-        resp.message("Welcome to LittleTexts! To set up your Pair, text me the words \"CREATE PAIR\"")
-
-    """
-    if request.values['NumMedia'] != '0':
-
-        # Use the message SID as a filename.
-        filename = request.values['MessageSid'] + '.png'
-        with open('{}/{}'.format(DOWNLOAD_DIRECTORY, filename), 'wb') as f:
-           image_url = request.values['MediaUrl0']
-           f.write(requests.get(image_url).content)
-
-        resp.message("Thanks for the image!")
-    else:
-        # Get the message the user sent our Twilio number
-        body = request.values.get('Body', None)
-
-        # Start our TwiML response
+        resp.message("Thanks for responding!")
+        
+        sms_send(config_obj['user2'][0]['phoneNumber'], f"From LittleTexts: {challenges_obj[str(data_obj['user1'][0]['currentChallenge'])][0]['responseTemplate'].replace('@@NICKNAME@@', config_obj['user1'][0]['nickname'])}")
+        
+        sms_send(config_obj['user2'][0]['phoneNumber'], body)
+        
+        data_obj['user1'][0]['expectingResponse'] = False
+        with open('data.json','w') as jsonFile:
+            json.dump(data_obj, jsonFile)
+                
+        return str(resp)
+    
+    if from_number == config_obj['user2'][0]['phoneNumber'] and data_obj['user2'][0]['expectingResponse']:
         resp = MessagingResponse()
-
-        print(body)
-        resp.message("eeeee")
-    """
-
-    return str(resp)
+        resp.message("Thanks for responding!")
+        
+        sms_send(config_obj['user1'][0]['phoneNumber'], f"From LittleTexts: {challenges_obj[str(data_obj['user2'][0]['currentChallenge'])][0]['responseTemplate'].replace('@@NICKNAME@@', config_obj['user2'][0]['nickname'])}")
+        
+        sms_send(config_obj['user1'][0]['phoneNumber'], body)
+        
+        data_obj['user2'][0]['expectingResponse'] = False
+        with open('data.json','w') as jsonFile:
+            json.dump(data_obj, jsonFile)
+        
+        return str(resp)
 
 if __name__ == "__main__":
-    # Find your Account SID and Auth Token at twilio.com/console
-    # and set the environment variables. See http://twil.io/secure
-    account_sid = os.environ['TWILIO_ACCOUNT_SID']
-    auth_token = os.environ['TWILIO_AUTH_TOKEN']
-    client = Client(account_sid, auth_token)
-    
-    app = firebase_admin.initialize_app()
-    db = firestore.client()
-
-    sms_send(client, os.environ['ADMIN_NUMBER'], "Server starting!")
+    if not file_exists("data.json"):
+        data_obj = {}
+        data_obj['user1'] = []
+        data_obj['user1'].append({
+            'expectingResponse': False,
+            'currentChallenge': None,
+            'pastChallenges': []
+        })
+        data_obj['user2'] = []
+        data_obj['user2'].append({
+            'expectingResponse': False,
+            'currentChallenge': None,
+            'pastChallenges': []
+        })
+        
+        with open('data.json','w') as jsonFile:
+            json.dump(data_obj, jsonFile)
+         
+    schedule_send()
     app.run(debug=False)

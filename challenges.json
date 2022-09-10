@@ -1,21 +1,13 @@
 {
-    "challenges": [
+    "0": [
         {
-            "id": "1",
             "challText": "Write a haiku for @@NICKNAME@@! A haiku is a three-lined poem consisting of a 5-syllable line, 7-syllable line, and another 5-syllable line",
-            "expectedResponse": "text",
             "responseTemplate": "I asked @@NICKNAME@@ to write you a haiku! Here it is:"
-        },
+        }
+    ],
+    "1": [
         {
-            "id": "2",
-            "challText": "Send @@NICKNAME@@ a nature-themed photo!",
-            "expectedResponse": "image",
-            "responseTemplate": "I asked @@NICKNAME@@ to take a nature-themed photo! Here it is:"
-        },
-        {
-            "id": "3",
             "challText": "What's a memory of @@NICKNAME@@ that's on your mind today?",
-            "expectedResponse": "text",
             "responseTemplate": "I asked @@NICKNAME@@ to send a memory of you that's on their mind today! Here it is:"
         }
     ]
