@@ -25,7 +25,7 @@
     ],
     "4": [
         {
-            "challText": "What do you remember most about the day you first @@NICKNAME@@?')",
+            "challText": "What do you remember most about the day you first met @@NICKNAME@@?')",
             "responseTemplate": "I asked @@NICKNAME@@ what they remember most about the day they met you. This is what they said:"
         }
     ]
