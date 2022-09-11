@@ -61,7 +61,7 @@ def incoming_sms():
         send_challs()
         resp.message("Challenge Sent")
     elif body == 'START':
-        resp.message("Welcome to LittleTexts! To get started, text me the command \"REGISTER <your nickname> <partner\'s nickname> <partner\'s phone number (including country code)>\"\n(ex. REGISTER Jesse Walter +14445556666)\n\nFor more information, read the documentation located at DOCS_SITE")
+        resp.message("Welcome to LittleTexts! To get started, text me the command \"REGISTER <your nickname> <partner\'s nickname> <partner\'s phone number (including country code)>\"\n(ex. REGISTER Jesse Walter +14445556666)\n\nFor more information, visit https://github.com/sohalsdr/LittleTexts")
     elif body.startswith("REGISTER"):
         args = body.split(" ")
         nick = args[1]
@@ -186,7 +186,7 @@ def incoming_sms():
             confirmed = output[7]
             resp.message(f"Info:\n\n{name1}: {number1}\n{name2}: {number2}\nConfirmed: {confirmed}\nStreak: {streak}")
     else:
-        resp.message("You've reached LittleTexts, a service to help couples connect through random daily challenges! To learn more, please visit our website at DOCS_SITE")
+        resp.message("You've reached LittleTexts, a service to help couples connect through random daily challenges! To learn more, please visit our website at https://github.com/sohalsdr")
     return str(resp)
 
 if __name__ == "__main__":
