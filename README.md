@@ -6,6 +6,8 @@
 
 LittleTexts is an SMS-based chatbot powered by Twilio, Python, Flask, and SQLite that messages you and your partner open-ended writing "challenges". Every day, at a random time, all LittleTexts users will recieve they day's prompt. They will then have until the next prompt to reply to the bot with their answer to the challenge. The bot will then forward that answer to their partner, creating a fun talking point and facilitating sharing more little moments!
 
+**This project was developed as part of ShellHacks 2022!**
+
 ---
 
 ## Installation/Usage
