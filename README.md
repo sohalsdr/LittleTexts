@@ -24,4 +24,4 @@ This version of LittleTexts is a work in progress and not currently suitable for
 
 ### How to use
 
-To use the bot, start by enrolling by texting the word "`START`". The bot will then prompt you to run `REGISTER <user_1> <user2> <2>` to add yourself to the service, and the bot will send a confirmation message to your partner to make sure they approve joining the service. 
+To use the bot, start by enrolling by texting the word "`START`". The bot will then prompt you to run `REGISTER <your_name> <partner's_name> <partner's_phone_number>` (ex. `REGISTER Jesse Walter +14445556666`) to add yourself to the service, and the bot will send a confirmation message to your partner to make sure they consent to being texted by LittleTexts
