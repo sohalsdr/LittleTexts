@@ -10,5 +10,23 @@
             "challText": "What's a memory of @@NICKNAME@@ that's on your mind today?",
             "responseTemplate": "I asked @@NICKNAME@@ to send a memory of you that's on their mind today! Here it is:"
         }
+    ],
+    "2": [
+        {
+            "challText":"What's one quality you admire about @@NICKNAME@@ and why?",
+            "responseTemplate": "I asked @@NICKNAME@@ one quality they admire the most about you. This is what they said:"
+        }
+    ],
+    "3": [
+        {
+            "challText": "If you could go anywhere in the world with @@NICKNAME@@, where would it be and why?",
+            "responseTemplate:": "I asked @@NICKNAME@@  where in the world they would go with you if they could go anywhere, and this is what they said:"
+        }
+    ],
+    "4": [
+        {
+            "challText": "What do you remember most about the day you first @@NICKNAME@@?')",
+            "responseTemplate": "I asked @@NICKNAME@@ what they remember most about the day they met you. This is what they said:"
+        }
     ]
 }
