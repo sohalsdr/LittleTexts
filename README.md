@@ -12,7 +12,7 @@ LittleTexts is an SMS-based chatbot powered by Twilio, Python, Flask, and SQLite
 
 ## Installation/Usage
 
-This version of LittleTexts is a work in progress and not currently suitable for real-world(sage). 
+This version of LittleTexts is a work in progress and not currently suitable for real-world usage. 
 
 ### How to install
 
